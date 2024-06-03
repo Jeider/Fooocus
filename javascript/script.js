@@ -257,7 +257,12 @@ function set_theme(theme) {
     }
 }
 
-function htmlDecode(input) {
-  var doc = new DOMParser().parseFromString(input, "text/html");
-  return doc.documentElement.textContent;
-}
+const urlParams = new URLSearchParams(window.location.search);
+const folderParam = urlParams.get('folder_key');
+document.cookie = 'folder_key=' + folderParam
+//if (folderParam == null) {
+//    alert('folder_key не указан, ошибка');
+//    window.addEventListener('load', function() {
+//        document.getElementsByTagName('gradio-app')[0].remove();
+//    })
+//}

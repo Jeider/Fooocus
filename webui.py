@@ -23,11 +23,12 @@ from modules.ui_gradio_extensions import reload_javascript
 from modules.auth import auth_enabled, check_auth
 from modules.util import is_json
 
-def get_task(*args):
+def get_task(request: gr.Request, *args):
     args = list(args)
     args.pop(0)
 
-    return worker.AsyncTask(args=args)
+    return worker.AsyncTask(request=request, args=args)
+
 
 def generate_clicked(task: worker.AsyncTask):
     import ldm_patched.modules.model_management as model_management

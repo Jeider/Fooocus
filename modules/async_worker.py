@@ -1,17 +1,50 @@
 import threading
-import re
 from modules.patch import PatchSettings, patch_settings, patch_all
+import asyncio
+
+import requests
+from http.cookies import SimpleCookie
 
 patch_all()
 
+FOLDER_KEY = 'folder_key'
+
 
 class AsyncTask:
-    def __init__(self, args):
+    def __init__(self, args, request=None):
+        self.request = request
         self.args = args
         self.yields = []
         self.results = []
         self.last_stop = False
         self.processing = False
+
+
+async def upload_to_storage(request, imgs):
+    if request is None:
+        return
+    folder_key = get_folder_key_from_request(request)
+    if not folder_key:
+        return
+    for img in imgs:
+        url = 'https://bit-5.ru/member_content/ajax_upload'
+        files = {'file': open(img, 'rb')}
+        data = {'folder_key': folder_key}
+        response = requests.post(url, files=files, data=data)
+        print('upload image...')
+        print(response.status_code)
+        print(response.text)
+
+
+def get_folder_key_from_request(request):
+    raw_cookie = request.kwargs['headers']['cookie']
+
+    cookie = SimpleCookie()
+    cookie.load(raw_cookie)
+
+    cookies = {k: v.value for k, v in cookie.items()}
+
+    return cookies.get(FOLDER_KEY)
 
 
 async_tasks = []
@@ -80,6 +113,8 @@ def worker():
             progressbar(async_task, progressbar_index, 'Checking for NSFW content ...')
             imgs = default_censor(imgs)
 
+        asyncio.run(upload_to_storage(async_task.request, imgs))
+
         async_task.results = async_task.results + imgs
 
         if do_not_show_finished_images:
@@ -135,6 +170,10 @@ def worker():
     @torch.no_grad()
     @torch.inference_mode()
     def handler(async_task):
+        # if not get_folder_key_from_request(async_task.request):
+        #     print('Failure. Folder key is not exist')
+        #     return
+
         execution_start_time = time.perf_counter()
         async_task.processing = True
 
