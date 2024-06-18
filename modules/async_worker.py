@@ -33,7 +33,7 @@ async def upload_to_storage(request, imgs):
         response = requests.post(url, files=files, data=data)
         print('upload image...')
         print(response.status_code)
-        print(response.text)
+        # print(response.text)
 
 
 def get_folder_key_from_request(request):
