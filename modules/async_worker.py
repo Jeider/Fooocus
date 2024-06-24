@@ -1,6 +1,9 @@
 import threading
 from modules.patch import PatchSettings, patch_settings, patch_all
 import asyncio
+import logging
+
+logging.basicConfig(filename='fooocus.log',level=logging.DEBUG)
 
 import requests
 from http.cookies import SimpleCookie
@@ -177,7 +180,10 @@ def worker():
         execution_start_time = time.perf_counter()
         async_task.processing = True
 
+
         args = async_task.args
+        logging.debug(args)
+
         args.reverse()
 
         prompt = args.pop()
