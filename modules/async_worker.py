@@ -2,11 +2,17 @@ import threading
 from modules.patch import PatchSettings, patch_settings, patch_all
 import asyncio
 import logging
-
-logging.basicConfig(filename='fooocus.log',level=logging.DEBUG)
+import sys
 
 import requests
 from http.cookies import SimpleCookie
+
+try:
+    the_id = int(sys.argv[-1])
+except ValueError:
+    the_id = 0
+
+logging.basicConfig(filename='fooocus%d.log' % the_id,level=logging.DEBUG)
 
 patch_all()
 
