@@ -12,7 +12,7 @@ try:
 except ValueError:
     the_id = 0
 
-logging.basicConfig(filename='fooocus%d.log' % the_id,level=logging.DEBUG)
+logging.basicConfig(filename='fooocus%d.log' % the_id,level=logging.WARNING)
 
 patch_all()
 
@@ -186,9 +186,8 @@ def worker():
         execution_start_time = time.perf_counter()
         async_task.processing = True
 
-
         args = async_task.args
-        logging.debug(args)
+        logging.warning(args)
 
         args.reverse()
 
