@@ -257,9 +257,20 @@ function set_theme(theme) {
     }
 }
 
+
 const urlParams = new URLSearchParams(window.location.search);
 const folderParam = urlParams.get('folder_key');
 document.cookie = 'folder_key=' + folderParam
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+if (!document.cookie.includes('client_index')) {
+    document.cookie = 'client_index=' + getRandomInt(99);
+}
+
+
 //if (folderParam == null) {
 //    alert('folder_key не указан, ошибка');
 //    window.addEventListener('load', function() {
