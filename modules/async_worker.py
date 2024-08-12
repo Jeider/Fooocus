@@ -23,6 +23,7 @@ FOLDER_KEY = 'folder_key'
 
 
 async def upload_to_storage(request, imgs):
+    return  # temporary disabled
     if request is None:
         return
     folder_key = get_folder_key_from_request(request)
